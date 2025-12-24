@@ -1,6 +1,6 @@
-# Day 1: AWS Fundamentals & Core Skills
+Day 1: AWS Fundamentals & Core Skills
 
-## Goal (Day 1)
+Goal (Day 1)
 Build a strong foundation in AWS core services and the basic workflow expected from a data engineering intern:
 - Understand key AWS services and what they’re used for
 - Set up IAM safely (non-root usage, roles)
@@ -9,11 +9,11 @@ Build a strong foundation in AWS core services and the basic workflow expected f
 
 ---
 
-## 1) AWS Core Services (high-level understanding)
+1) AWS Core Services (high-level understanding)
 
-### IAM (Identity and Access Management)
-**What it is:** AWS permissions and access control.  
-**Key concepts:**
+ IAM (Identity and Access Management)
+ What it is:** AWS permissions and access control.  
+ Key concepts:**
 - **Root user:** account owner; should not be used daily.
 - **IAM users:** identities for people/systems (avoid long-lived access keys when possible).
 - **Groups:** attach policies once and manage users cleanly.
