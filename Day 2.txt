@@ -1,0 +1,115 @@
+Day 2 Notes:
+1) The Automation Bridge: Boto3
+
+Used Boto3 to interact with S3 programmatically (create bucket, upload, list, tag, policy, lifecycle).
+Why it matters: In real environments, console work is for debugging. Repeatable infrastructure + pipelines come from code.
+
+Reality check (important):
+
+“Automation isn't magic. Your script must check state first (bucket exists, policy already applied, lifecycle already present) and then apply changes safely.
+
+For production-grade automation, this eventually moves into IaC (Terraform/CloudFormation/CDK) for the bucket config, and Boto3 for runtime object operations (uploads, tagging, manifests).
+
+Key learning: Boto3 is your “ops glue” for ingestion and governance tasks.
+
+2) Data Lake Partitioning: Prefixes
+Adopted a prefix convention: raw/, metadata/, logs/.
+
+Why it matters: S3 is flat storage. Prefixes are how you:
+
+keep ingestion predictable
+
+avoid duplicates
+
+support query engines (Athena/Glue/Spark) with partition patterns
+
+Enterprise refinement:
+Your structure is good, but the best practice is to add domain + source + date partitions under raw, like:
+
+raw/<domain>/<source>/ingest_date=YYYY-MM-DD/
+
+metadata/<domain>/<source>/
+
+logs/<pipeline>/<YYYY>/<MM>/<DD>/
+
+That gives you:
+
+clean lineage
+
+efficient query pruning
+
+easy retention and backfills
+
+Correction: “raw is immutable” is the intent, but enforce it with controls (versioning, object lock, restricted delete permissions).
+
+3) Security Guardrails: Bucket Policies
+
+ Added a bucket policy that denies non-HTTPS access.
+
+Why it matters: This is a classic “hard guardrail.” Even with valid credentials, insecure transport gets blocked.
+
+Correct principle: Explicit Deny always wins.
+
+Enterprise add-ons you’ll be expected to mention:
+
+Block Public Access ON (account + bucket level)
+
+SSE encryption enforced (SSE-S3 or SSE-KMS)
+
+Least privilege IAM (roles, not long-lived user keys)
+
+Access logs (S3 server access logs or CloudTrail data events)
+
+If someone audits this bucket, HTTPS-only is good, but encryption + public access blocking is usually non-negotiable.
+
+4) Cost Management: Lifecycle Policies
+
+Transitioned objects from Standard → Glacier after 90 days.
+
+Why it matters: Storage cost optimization should be automated, not remembered.
+
+Enterprise nuance:
+
+Glacier isn’t “free” to access. There are retrieval costs and delays (minutes to hours depending on tier).
+
+Often teams use Intelligent-Tiering first, then Glacier for deep archive.
+
+If “immutable audit” is the goal, lifecycle should pair with Object Lock (if governance requires WORM retention).
+
+
+5) Governance Backbone: Metadata & Tagging
+
+
+Defined technical/business/operational metadata.
+
+Tagged objects (Owner, Classification, Domain).
+
+Created a manifest (manifest2.json) as a “passport” for the bucket.
+
+Why it matters: Metadata is how you scale trust and ownership. Without it, S3 becomes a dumping ground.
+
+One clean distinction to keep straight:
+
+Object Tags = fast, searchable, great for cost allocation + basic access patterns.
+
+Metadata Manifest (JSON/YAML) = rich documentation and operational context.
+
+Data Catalog (Glue/Unity Catalog/etc.) = query + discovery + lineage at scale.
+
+Enterprise move: make classification enforceable:
+
+“Restricted” data requires KMS CMK, limited roles, and audit logging by default.
+
+Final Summary 
+
+You didn’t “upload files to S3.” You built the foundations of a governed data lake:
+
+Automation (Boto3) to remove human error
+
+Structure (prefix strategy) to prevent a data swamp
+
+Security (explicit deny + HTTPS) as guardrails
+
+Cost control (lifecycle transitions) as default behavior
+
+Governance (tags + manifest) to make data trustworthy and owned
