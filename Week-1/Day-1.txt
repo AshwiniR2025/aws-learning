@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 Day 1: AWS Fundamentals & Core Skills
 
 Goal (Day 1)
+=======
+Day 1 : AWS Fundamentals & Core Skills
+Goal (Day  )
+>>>>>>> d8e61a7 (Save local edits)
 Build a strong foundation in AWS core services and the basic workflow expected from a data engineering intern:
 - Understand key AWS services and what they’re used for
 - Set up IAM safely (non-root usage, roles)
@@ -8,7 +13,9 @@ Build a strong foundation in AWS core services and the basic workflow expected f
 - Learn GitHub workflow (repo, branch, PR mindset)
 
 ---
+AWS Core Services (high-level understanding)
 
+<<<<<<< HEAD
 1) AWS Core Services (high-level understanding)
 
  IAM (Identity and Access Management)
@@ -21,119 +28,131 @@ Build a strong foundation in AWS core services and the basic workflow expected f
 - **Policies:** define permissions (Action + Resource). Default is deny; explicit deny overrides allow.
 
 **Best practices learned:**
+=======
+IAM (Identity and Access Management)
+What it is: AWS permissions and access control.  
+Key concepts:
+- Root user: account owner; should not be used daily.
+- IAM users: identities for people/systems (avoid long-lived access keys when possible).
+- Groups: attach policies once and manage users cleanly.
+- Roles: temporary credentials assumed by services (Lambda/EC2/Glue) or users (Switch Role).
+- Policies: define permissions (Action + Resource). Default is deny; explicit deny overrides allow.
+
+Best practices learned:
+>>>>>>> d8e61a7 (Save local edits)
 - Use least privilege
 - Prefer roles over access keys for services
 - Keep S3 private by default
 
-### S3 (Simple Storage Service)
-**What it is:** Object storage for files (CSV, Parquet, images, logs).  
-**Key concepts:**
-- **Bucket** (container) → globally unique name
-- **Object** (file)
-- **Key/prefix** (path-like name such as `raw/…`)
+S3 (Simple Storage Service)
+What it is: Object storage for files (CSV, Parquet, images, logs).  
+Key concepts:
+- Bucket (container) → globally unique name
+- Object (file)
+- Key/prefix (path-like name such as `raw/…`)
 - Versioning supports rollback of overwritten files
 
-### Lambda
-**What it is:** Serverless compute. Runs code without managing servers.  
-**Common use:** Trigger on S3 upload, run transformations, validations, notifications.  
-**Key dependency:** needs an IAM **execution role** to access other services like S3.
+Lambda
+What it is: Serverless compute. Runs code without managing servers.  
+Common use: Trigger on S3 upload, run transformations, validations, notifications.  
+Key dependency: needs an IAM execution role to access other services like S3.
 
-### CloudWatch
-**What it is:** Monitoring and logging.  
-**Common use:** Lambda logs and metrics, alarms (CPU, errors, etc.).
+cloudWatch
+What it is: Monitoring and logging.  
+Common use: Lambda logs and metrics, alarms (CPU, errors, etc.).
 
-### CloudTrail
-**What it is:** Audit logs of AWS API actions.  
-**Common use:** Track “who did what” (security investigations, compliance).
+CloudTrail
+  What it is:   Audit logs of AWS API actions.  
+  Common use:   Track “who did what” (security investigations, compliance).
 
-### AWS Glue
-**What it is:** Serverless ETL for data engineering.  
-**Common use:** Read raw data from S3, transform, write curated data back to S3.  
-**Key dependency:** Glue runs with an IAM role (service role).
+    AWS Glue
+  What it is:   Serverless ETL for data engineering.  
+  Common use:   Read raw data from S3, transform, write curated data back to S3.  
+  Key dependency:   Glue runs with an IAM role (service role).
 
-### RDS (PostgreSQL)
-**What it is:** Managed relational database (Postgres).  
-**Common use:** store structured data for applications and analytics; connect from ETL jobs.
+    RDS (PostgreSQL)
+  What it is:   Managed relational database (Postgres).  
+  Common use:   store structured data for applications and analytics; connect from ETL jobs.
 
 ---
 
-## 2) Security & Compliance (Day 1 level)
-- Keep **Block Public Access** ON for S3 buckets
+   2) Security & Compliance (Day   level)
+- Keep   Block Public Access   ON for S3 buckets
 - Use IAM groups and least privilege policies
 - Roles + temporary credentials reduce risk (no hardcoded keys)
 - CloudTrail is essential for auditing changes
 
 ---
 
-## 3) Setup: IAM + Billing Alerts
-### IAM setup completed
-- Created **IAM user** for daily work (instead of root)
-- Created **IAM group** to manage permissions
-- Created **IAM role** for Lambda (service role pattern)
+   3) Setup: IAM + Billing Alerts
+    IAM setup completed
+- Created   IAM user   for daily work (instead of root)
+- Created   IAM group   to manage permissions
+- Created   IAM role   for Lambda (service role pattern)
 
-### Billing alerts (recommended)
-- Set a monthly **Budget** with alerts (ex: 50%, 80%, 100%)
+    Billing alerts (recommended)
+- Set a monthly   Budget   with alerts (ex: 50%, 80%,  00%)
 - Keep an eye on “always-on” resources (EC2, NAT Gateway, large S3 storage)
 
 ---
 
-## 4) Hands-on: S3 Bucket + Uploads + Versioning
+   4) Hands-on: S3 Bucket + Uploads + Versioning
 
-### Bucket created
+    Bucket created
 - Bucket: `oubt-demo-s3`
 - Block Public Access: ON
 - Default encryption: Enabled
 - Versioning: Enabled
 
-### Folder/prefix structure
+    Folder/prefix structure
 - `raw/` for incoming/source files
 
-### Files uploaded (different file types)
+    Files uploaded (different file types)
 - CSV: `taxi_zone_lookup.csv`
 - Parquet: `yellow_tripdata_2025-08.parquet`
 - TXT: `sample_log.txt`
 - JPG: `sample_image.jpg`
 
-### Versioning learning
-- Versioning creates a new version when the **same object key** is uploaded again.
+    Versioning learning
+- Versioning creates a new version when the same object key is uploaded again.
 - Versioning helps recover from accidental overwrite/delete.
 
 ---
 
-## 5) Hands-on: IAM Users, Groups, Roles (Role-based access)
-- IAM-Ashwini_Oubt with admistrative access attached with OUBT_Demo group 
+   5) Hands-on: IAM Users, Groups, Roles (Role-based access)
+- IAM-Ashwini_Oubt with admistrative access and awsbillingreadonly attached with OUBT_Demo group 
 - 
 
-### Role created for Lambda
+    Role created for Lambda
 - Role: `LambdaS3Role`
 
-**Trust policy (WHO can assume):**
+  Trust policy (WHO can assume):  
 - Trusted entity: Lambda (`lambda.amazonaws.com`)
 - Action: `sts:AssumeRole`
 
-**Permissions policies (WHAT it can do):**
+  Permissions policies (WHAT it can do):  
 - `AWSLambdaBasicExecutionRole` (CloudWatch logging)
 - Custom S3 policy for bucket `oubt-demo-s3`:
   - `s3:ListBucket` on `arn:aws:s3:::oubt-demo-s3`
-  - `s3:GetObject` and `s3:PutObject` on `arn:aws:s3:::oubt-demo-s3/*`
+  - `s3:GetObject` and `s3:PutObject` on `arn:aws:s3:::oubt-demo-s3/ `
 
-### Validation
+    Validation
 - Created a Lambda function, attached `LambdaS3Role`
 - Ran a test successfully (S3 list objects worked)
 
-**Conclusion:** trust policy + S3 permissions are working end-to-end.
+  Conclusion:   trust policy + S3 permissions are working end-to-end.
 
 ---
 
-## 6) GitHub Basics (Repo setup + PR workflow)
+   6) GitHub Basics (Repo setup + PR workflow)
 
-### Repo setup completed
+    Repo setup completed
 - Created repo: `aws-learning`
 - Cloned locally and verified clean working tree
-- Created branch: `docs/day1-notes`
+- Created branch: `docs/day -notes`
 
-### PR workflow (standard pattern)
-1) Create a branch for your work
+    PR workflow (standard pattern)
+ ) Create a branch for your work
 2) Add/update files
 3) Commit changes
 4) Push branch to GitHub
@@ -141,27 +160,25 @@ Build a strong foundation in AWS core services and the basic workflow expected f
 
 ---
 
-## 7) Python + SQL + Data Modeling (Day 1 expectations)
-> Day 1 focus is awareness + setup (not deep coding yet)
-
-### Python for data engineering (what matters)
+   7) Python + SQL + Data Modeling (Day   expectations)
+    Python for data engineering (what matters)
 - Reading/writing files (CSV/JSON/Parquet)
 - Basic transformations (filter, aggregate)
 - Knowing that frameworks like Spark/Glue scale this later
 
-### SQL for data engineering (what matters)
+    SQL for data engineering (what matters)
 - SELECT, WHERE, JOIN, GROUP BY
 - Aggregations and filters
 - Thinking in tables and transformations
 
-### Data modeling fundamentals
+    Data modeling fundamentals
 - Tables + keys + relationships
 - Normalized vs analytics models (later: star schema)
 - Data lake layers concept: raw → curated → gold
 
 ---
 
-## Deliverables (what I completed today)
+   Deliverables (what I completed today)
 - S3 bucket created with correct security defaults + versioning
 - Uploaded multiple file types (CSV, Parquet, TXT, JPG)
 - IAM user + group created
